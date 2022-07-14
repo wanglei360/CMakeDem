@@ -24,27 +24,30 @@ import kotlinx.coroutines.withContext
  */
 class MainActivity : AppCompatActivity() {
 
+    private var num = 0
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val scope by lazy { CoroutineScope(Dispatchers.Default) }
-    private val handler: Handler = object : Handler(Looper.getMainLooper()) {
-        override fun handleMessage(msg: Message) {
-            super.handleMessage(msg)
-            if (msg.arg1 == 1) {
-                binding.iv.setImageBitmap(msg.obj as Bitmap)
-                binding.pb.visibility = View.GONE
-                binding.tv.text =
-                    when (msg.arg2) {
-                        0 -> "原图"
-                        1 -> "水墨式的"
-                        2 -> "黑白式的"
-                        3 -> "底片式的"
-                        4 -> "左右调转"
-                        else -> "高斯模糊的样式"
-                    }
+
+    private val handler by lazy {
+        object : Handler(Looper.getMainLooper()) {
+            override fun handleMessage(msg: Message) {
+                super.handleMessage(msg)
+                if (msg.arg1 == 1) {
+                    binding.iv.setImageBitmap(msg.obj as Bitmap)
+                    binding.pb.visibility = View.GONE
+                    binding.tv.text =
+                        when (msg.arg2) {
+                            0 -> "水墨式的"
+                            1 -> "黑白式的"
+                            2 -> "底片式的"
+                            3 -> "左右调转"
+                            4 -> "高斯模糊的样式"
+                            else -> "原图"
+                        }
+                }
             }
         }
     }
-    private var num = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +56,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun jniTest(view: View) {
-//         创建JNI实例，并调用本地声明的方法
         val result = JniDemo().sayHello()
         println(result)
         Toast.makeText(this, result, Toast.LENGTH_LONG).show()
@@ -72,36 +74,22 @@ class MainActivity : AppCompatActivity() {
             scope.launch {
                 withContext(Dispatchers.IO) {
                     when (num) {
-                        0 -> {
-                            num = 1
-                            sendMsg(JNIBitmap().blackAndWhite(bitmap), num, bitmap)
-                        }
-                        1 -> {
-                            num = 2
-                            sendMsg(JNIBitmap().gray(bitmap), num, bitmap)
-                        }
-                        2 -> {
-                            num = 3
-                            sendMsg(JNIBitmap().negative(bitmap), num, bitmap)
-                        }
+                        0 -> sendMsg(JNIBitmap().blackAndWhite(bitmap), num, bitmap)
+                        1 -> sendMsg(JNIBitmap().gray(bitmap), num, bitmap)
+                        2 -> sendMsg(JNIBitmap().negative(bitmap), num, bitmap)
                         3 -> {
-                            num = 4
                             val leftRight = JNIBitmap().leftRight(bitmap)
                             sendMsg(if (leftRight == null) -1 else 1, num, leftRight)
                         }
-                        4 -> {
-                            num = 5
-                            sendMsg(JNIBitmap().blurBitmap(bitmap, 500), num, bitmap)
-                        }
-                        else -> {
-                            num = 0
-                            sendMsg(1, num, bitmap)
-                        }
+                        4 -> sendMsg(JNIBitmap().blurBitmap(bitmap, 500), num, bitmap)
+                        else -> sendMsg(1, num, bitmap)
                     }
                     val endTime = System.currentTimeMillis()
 
                     Log.i("hahah", "时间是：${endTime - startTime} 毫秒")
                 }
+                num++
+                if (num == 6) num = 0
             }
         }
     }
