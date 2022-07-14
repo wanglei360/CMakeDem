@@ -1,5 +1,5 @@
 * ```Appearance & Behavior ->System Settings->Android SDK->SDK Tools```->勾选LLDB、NDK、CMake
-* ```Project Structure->SDK Location```->选择NDK(无法选择，原因不明)，直接在local.propertes中添加 ```ndk.dir=/Users/leiwu/Documents/sdk/ndk/24.0.8215888```也行 ```在没有使用到C语言的时候，只是用CMake，不需要使用NDK```
+* ```Project Structure->SDK Location```->选择NDK(无法选择，原因不明)，直接在local.propertes中添加 ```ndk.dir=/Users/leiwu/Documents/sdk/ndk/24.0.8215888```也行 **在没有使用到C语言的时候，只是用CMake，不需要使用NDK**
 
 * 配置CMake
   在```build.gradle ->android ->defaultConfig```中添加以下代码块
