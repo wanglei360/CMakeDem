@@ -1,0 +1,55 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+//build.gradle ->android ->defaultConfig ->添加
+android {
+    compileSdk 32
+
+    defaultConfig {
+        applicationId "com.kts.testjni"
+        minSdk 21
+        targetSdk 32
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        externalNativeBuild{
+            // so适配讲解：https://mp.weixin.qq.com/s/jnZpgaRFQT5ULk9tHWMAGg 或者 https://www.jianshu.com/p/0bd872a75df1，都讲的挺好
+            // 兼容全部只需要armeabi就够了，微信只使用了arm64-v8a，但需要放弃部分老旧型号，
+            cmake{
+                //现在就支持这些，mips之类的现在都不在支持了
+//                abiFilters 'arm64-v8a','armeabi-v7a','x86','x86_64'
+                cppFlags ""
+            }
+        }
+    }
+    // 在android节点下,指定CMakeLists.txt路径
+    externalNativeBuild{
+        cmake{
+            // 在该文件种设置所要编写的c++源码位置，以及编译后so文件的名字
+            path "src/main/cpp/CMakeLists.txt"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'com.google.android.material:material:1.6.1'
+}
