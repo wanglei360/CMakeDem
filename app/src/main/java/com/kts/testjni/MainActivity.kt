@@ -77,9 +77,8 @@ class MainActivity : AppCompatActivity() {
                         0 -> sendMsg(JNIBitmap().blackAndWhite(bitmap), num, bitmap)
                         1 -> sendMsg(JNIBitmap().gray(bitmap), num, bitmap)
                         2 -> sendMsg(JNIBitmap().negative(bitmap), num, bitmap)
-                        3 -> {
-                            val leftRight = JNIBitmap().leftRight(bitmap)
-                            sendMsg(if (leftRight == null) -1 else 1, num, leftRight)
+                        3 -> JNIBitmap().leftRight(bitmap).apply {
+                            sendMsg(if (this == null) -1 else 1, num, this)
                         }
                         4 -> sendMsg(JNIBitmap().blurBitmap(bitmap, 500), num, bitmap)
                         else -> sendMsg(1, num, bitmap)
