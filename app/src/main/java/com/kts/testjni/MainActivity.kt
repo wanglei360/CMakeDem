@@ -53,6 +53,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         binding.iv.setImageBitmap(getBitmap())
+        binding.iv.post {
+
+        }
     }
 
     fun jniTest(view: View) {
@@ -80,7 +83,7 @@ class MainActivity : AppCompatActivity() {
                         3 -> JNIBitmap().leftRight(bitmap).apply {
                             sendMsg(if (this == null) -1 else 1, num, this)
                         }
-                        4 -> sendMsg(JNIBitmap().blurBitmap(bitmap, 500), num, bitmap)
+                        4 -> sendMsg(JNIBitmap().blurBitmap(bitmap, 100), num, bitmap)
                         else -> sendMsg(1, num, bitmap)
                     }
                     val endTime = System.currentTimeMillis()
@@ -93,7 +96,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getBitmap(): Bitmap = BitmapFactory.decodeResource(resources, R.mipmap.bbb)
+    private fun getBitmap(): Bitmap = BitmapFactory.decodeResource(resources, R.mipmap.nature)
 
     private fun sendMsg(stateCode: Int, identification: Int, bm: Bitmap?) {
         val msg = Message.obtain()
